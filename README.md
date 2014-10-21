@@ -1,0 +1,4 @@
+doris
+=====
+
+solr develope mode
