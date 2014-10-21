@@ -1,0 +1,56 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource"
+                driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://10.200.130.128:3306/souke"
+                batchSize="-1"
+                user="root"
+                password="root"/>
+    <document>
+        <!--<entity name="soukeclass" pk="Id"
+                query="SELECT Id,`Code`,`Name`,CourseName,Property,CityId,Place,CourseIntroduction,CourseCode,ApplyState,Price,CategoryCode_1th,StartDate_timestamp FROM souke_class_new "
+                 >
+            <field column="Id" name="id" />
+            <field column="Name" name="name" />
+            <field column="CityId" name="cityId" />
+            <field column="CourseIntroduction" name="courseIntroduction" />
+            <field column="Price" name="price" />
+            <field column="CourseCode" name="courseCode" />
+            <entity name="valid_class" query="SELECT CourseCode,COUNT(CourseCode) AS class_num_valid ,MIN(Price) AS min_price_valid FROM `souke_class_new`  WHERE CourseCode='${soukeclass.courseCode}' AND CityId='${soukeclass.cityId}'  AND ApplyState=0 AND UNIX_TIMESTAMP() &lt; StartDate_timestamp  GROUP BY CourseCode,CityId">
+                 <field column="class_num_valid" name="class_num_valid" />
+                 <field column="min_price_valid" name="min_price_valid" />
+            </entity>
+
+            <entity name="all_class" query="SELECT CourseCode,COUNT(CourseCode) AS class_num_all ,MIN(Price) AS min_price_all FROM `souke_class_new`  WHERE CourseCode='${soukeclass.courseCode}' GROUP BY CourseCode,CityId">
+                 <field column="class_num_all" name="class_num_all" />
+                 <field column="min_price_all" name="min_price_all" />
+            </entity>
+
+        </entity>-->
+
+        <entity name="soukeclass" pk="CourseCode"
+                query="SELECT CityId,CourseCode,CourseName,CourseIntroduction,ImgUrl,CourseIntro,StudentLevel,
+            COUNT(CourseCode) AS class_num_all ,
+            MIN(Price) AS min_price_all,
+            sum(case when ApplyState=0 AND UNIX_TIMESTAMP() &lt; StartDate_timestamp then 1 else 0 end) as class_num_valid,
+            min(case when ApplyState=0 AND UNIX_TIMESTAMP() &lt; StartDate_timestamp then Price end) as min_price_valid
+            FROM `souke_class_new` GROUP BY CourseCode,`CityId`"
+                >
+            <field column="CityId" name="cityId"/>
+            <field column="CourseCode" name="courseCode"/>
+            <field column="CourseName" name="courseName"/>
+            <field column="CourseIntroduction" name="courseIntroduction"/>
+            <field column="class_num_all" name="class_num_all"/>
+            <field column="min_price_all" name="min_price_all"/>
+            <field column="class_num_valid" name="class_num_valid"/>
+            <field column="min_price_valid" name="min_price_valid"/>
+            <field column="imgUrl" name="ImgUrl"/>
+            <field column="courseIntro" name="CourseIntro"/>
+            <field column="studentLevel" name="StudentLevel"/>
+
+        </entity>
+
+
+
+
+    </document>
+</dataConfig>
